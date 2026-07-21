@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semester Grade Sheet</title>
+<style>
+  :root{
+    --deep: #0b3a56;
+    --deep2: #114f74;
+    --mid: #1c6f9c;
+    --sky: #cfe3f5;
+    --sky-light: #eaf3fb;
+    --ink: #0b2436;
+    --card-bg: rgba(255,255,255,0.86);
+    --glass-border: rgba(255,255,255,0.5);
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: var(--ink);
+    padding: 40px 16px 64px;
+    background:
+      radial-gradient(circle at 50% 38%, var(--mid) 0%, var(--deep2) 45%, var(--deep) 100%);
+    display:flex;
+    justify-content:center;
+  }
+
+  .sheet{
+    width: 100%;
+    max-width: 820px;
+    background: var(--card-bg);
+    backdrop-filter: blur(18px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    box-shadow: 0 30px 60px -20px rgba(6,25,40,0.55), 0 0 0 1px rgba(255,255,255,0.3) inset;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .sheet::before{
+    content:"";
+    position:absolute;
+    top:0; left:0; right:0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--deep), var(--mid), var(--sky));
+  }
+
+  header{
+    padding: 34px 40px 20px;
+    text-align:center;
+    background: linear-gradient(180deg, var(--sky-light) 0%, rgba(234,243,251,0) 100%);
+  }
+
+  .eyebrow{
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--mid);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+
+  h1{
+    font-size: 30px;
+    font-weight: 800;
+    margin: 0 0 4px;
+    color: var(--deep);
+    letter-spacing: -0.5px;
+  }
+
+  .subhead{
+    font-size: 13px;
+    color: #4a6376;
+    margin: 0;
+  }
+
+  .student-block{
+    padding: 22px 40px 4px;
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .field{
+    display:flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .field label{
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--mid);
+  }
+
+  .field input[type="text"]{
+    padding: 11px 14px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(28,111,156,0.25);
+    background: #fff;
+    font-size: 14px;
+    color: var(--ink);
+    font-family: inherit;
+  }
+
+  .field input[type="text"]:focus{
+    outline: none;
+    border-color: var(--mid);
+    box-shadow: 0 0 0 3px rgba(28,111,156,0.15);
+  }
+
+  .grid{
+    padding: 26px 40px 8px;
+  }
+
+  table{
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+  }
+
+  thead th{
+    text-align: left;
+    font-size: 10.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--mid);
+    font-weight: 700;
+    border-bottom: 2px solid rgba(28,111,156,0.2);
+    padding: 8px 10px;
+  }
+
+  tbody td{
+    padding: 12px 10px;
+    border-bottom: 1px solid rgba(28,111,156,0.12);
+    vertical-align: middle;
+  }
+
+  .code-cell{
+    font-weight: 800;
+    font-size: 15px;
+    color: var(--deep);
+  }
+
+  .code-cell small{
+    display:block;
+    font-weight: 500;
+    font-size: 11px;
+    color: #6b7d8a;
+    margin-top: 2px;
+  }
+
+  input[type="number"]{
+    width: 68px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1.5px solid rgba(28,111,156,0.25);
+    background: #fff;
+    font-size: 14px;
+    color: var(--ink);
+    font-family: inherit;
+  }
+
+  input[type="number"]:focus{
+    outline: none;
+    border-color: var(--mid);
+    box-shadow: 0 0 0 3px rgba(28,111,156,0.15);
+  }
+
+  .credit-badge{
+    font-size: 11px;
+    color: #6b7d8a;
+    background: rgba(28,111,156,0.08);
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+
+  .grade-pill{
+    display:inline-block;
+    min-width: 36px;
+    text-align:center;
+    padding: 5px 10px;
+    font-weight: 800;
+    font-size: 12.5px;
+    border-radius: 999px;
+    color: var(--ink);
+  }
+
+  .grade-O{ background:#c9ecd6; }
+  .grade-Aplus{ background:#d8edc4; }
+  .grade-A{ background:#eee7b8; }
+  .grade-Bplus{ background:#f3d9a6; }
+  .grade-B{ background:#f2c79a; }
+  .grade-C{ background:#efb298; }
+  .grade-P{ background:#eba099; }
+  .grade-F{ background:#e28080; color:#4a1111; }
+
+  .result{
+    margin: 10px 40px 26px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--deep) 0%, var(--mid) 100%);
+    color: #eaf3fb;
+    padding: 22px 26px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    box-shadow: 0 12px 30px -8px rgba(11,58,86,0.55);
+  }
+
+  .result .label{
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sky);
+    margin: 0 0 4px;
+    font-weight: 700;
+  }
+
+  .result .value{
+    font-size: 38px;
+    font-weight: 800;
+    margin: 0;
+  }
+
+  .result .who{
+    font-size: 12px;
+    color: var(--sky);
+    margin: 2px 0 0;
+  }
+
+  .result .remark{
+    font-size: 13px;
+    color: #d7e8f4;
+    max-width: 260px;
+    text-align: right;
+  }
+
+  footer{
+    padding: 0 40px 30px;
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  button{
+    font-family: inherit;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    font-size: 13px;
+    padding: 12px 22px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+
+  #calcBtn{
+    background: linear-gradient(135deg, var(--mid), var(--deep));
+    color: #fff;
+    box-shadow: 0 8px 18px -6px rgba(28,111,156,0.6);
+  }
+
+  #resetBtn{
+    background: rgba(28,111,156,0.1);
+    color: var(--deep);
+  }
+
+  button:hover{ transform: translateY(-1px); }
+  button:active{ transform: translateY(0); }
+  button:focus-visible{ outline: 2px solid var(--mid); outline-offset: 2px; }
+
+  .scale-note{
+    font-size: 11px;
+    color: #6b7d8a;
+    flex: 1;
+    min-width: 200px;
+  }
+
+  @media (max-width: 600px){
+    header, .student-block, .grid, .result, footer{ padding-left: 22px; padding-right: 22px; }
+    .student-block{ grid-template-columns: 1fr; }
+    .result{ flex-direction: column; align-items: flex-start; }
+    .result .remark{ text-align: left; }
+    input[type="number"]{ width: 56px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+  <header>
+    <p class="eyebrow">B.Tech &middot; Computer Science &amp; Engineering</p>
+    <h1>Semester Grade Sheet</h1>
+    <p class="subhead">Enter your details and marks to compute grade points and SGPA</p>
+  </header>
+
+  <div class="student-block">
+    <div class="field">
+      <label for="studentName">Student Name</label>
+      <input type="text" id="studentName" placeholder="e.g. Aarav Sharma">
+    </div>
+    <div class="field">
+      <label for="studentPRN">PRN</label>
+      <input type="text" id="studentPRN" placeholder="e.g. 22070123456">
+    </div>
+  </div>
+
+  <div class="grid">
+    <table id="gradeTable">
+      <thead>
+        <tr>
+          <th>Subject</th>
+          <th>Credits</th>
+          <th>Marks&nbsp;/100</th>
+          <th>Grade</th>
+          <th>Points</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- rows injected by JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <div class="result">
+    <div>
+      <p class="label">SGPA</p>
+      <p class="value" id="sgpaValue">0.00</p>
+      <p class="who" id="whoLine">&nbsp;</p>
+    </div>
+    <p class="remark" id="remarkText">Enter marks above to see your standing.</p>
+  </div>
+
+  <footer>
+    <button id="calcBtn">Calculate</button>
+    <button id="resetBtn">Reset</button>
+    <div class="scale-note">Scale: O(90+)=10 &middot; A+(80-89)=9 &middot; A(70-79)=8 &middot; B+(60-69)=7 &middot; B(50-59)=6 &middot; C(45-49)=5 &middot; P(40-44)=4 &middot; F(&lt;40)=0</div>
+  </footer>
+</div>
+
+<script>
+  const subjects = [
+    { code: "CN",   name: "Computer Networks",       credits: 4 },
+    { code: "DC",   name: "Distributed Computing",   credits: 3 },
+    { code: "CC",   name: "Cloud Computing",          credits: 3 },
+    { code: "AIML", name: "AI &amp; Machine Learning", credits: 4 }
+  ];
+
+  const tbody = document.querySelector("#gradeTable tbody");
+
+  function gradeClass(letter){
+    return "grade-" + letter.replace("+", "plus");
+  }
+
+  function computeGrade(marks){
+    if (marks >= 90) return { letter: "O",  points: 10 };
+    if (marks >= 80) return { letter: "A+", points: 9  };
+    if (marks >= 70) return { letter: "A",  points: 8  };
+    if (marks >= 60) return { letter: "B+", points: 7  };
+    if (marks >= 50) return { letter: "B",  points: 6  };
+    if (marks >= 45) return { letter: "C",  points: 5  };
+    if (marks >= 40) return { letter: "P",  points: 4  };
+    return { letter: "F", points: 0 };
+  }
+
+  function buildRows(){
+    tbody.innerHTML = "";
+    subjects.forEach((subj, i) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td class="code-cell">${subj.code}<small>${subj.name}</small></td>
+        <td><span class="credit-badge">${subj.credits} cr</span></td>
+        <td>
+          <input type="number" step="1"
+                 id="marks-${i}" placeholder="0" aria-label="${subj.name} marks">
+        </td>
+        <td><span class="grade-pill" id="grade-${i}">--</span></td>
+        <td id="points-${i}">--</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function calculate(){
+    let totalPoints = 0;
+    let totalCredits = 0;
+    let anyEntered = false;
+    let anyFail = false;
+    let anyInvalid = false;
+
+    subjects.forEach((subj, i) => {
+      const input = document.getElementById(`marks-${i}`);
+      const raw = input.value.trim();
+      const gradePill = document.getElementById(`grade-${i}`);
+      const pointsCell = document.getElementById(`points-${i}`);
+
+      if (raw === "") {
+        gradePill.textContent = "--";
+        gradePill.className = "grade-pill";
+        pointsCell.textContent = "--";
+        return;
+      }
+
+      let marks = Number(raw);
+
+      if (isNaN(marks) || marks < 0 || marks > 100) {
+        gradePill.textContent = "Invalid marks";
+        gradePill.className = "grade-pill grade-F";
+        pointsCell.textContent = "--";
+        input.style.borderColor = "#e28080";
+        anyInvalid = true;
+        return;
+      }
+      input.style.borderColor = "";
+
+      anyEntered = true;
+      const { letter, points } = computeGrade(marks);
+      if (letter === "F") anyFail = true;
+
+      gradePill.textContent = letter;
+      gradePill.className = "grade-pill " + gradeClass(letter);
+      pointsCell.textContent = points.toFixed(1);
+
+      totalPoints += points * subj.credits;
+      totalCredits += subj.credits;
+    });
+
+    const sgpaValue = document.getElementById("sgpaValue");
+    const remarkText = document.getElementById("remarkText");
+    const whoLine = document.getElementById("whoLine");
+
+    const name = document.getElementById("studentName").value.trim();
+    const prn = document.getElementById("studentPRN").value.trim();
+
+    let parts = [];
+    if (name) parts.push(name);
+    if (prn) parts.push("PRN " + prn);
+    whoLine.textContent = parts.join(" — ");
+
+    if (!anyEntered || totalCredits === 0) {
+      sgpaValue.textContent = "0.00";
+      remarkText.textContent = "Enter marks above to see your standing.";
+      return;
+    }
+
+    const sgpa = totalPoints / totalCredits;
+    sgpaValue.textContent = sgpa.toFixed(2);
+
+    if (anyInvalid) {
+      remarkText.textContent = "Invalid marks, please enter valid marks.";
+    } else if (anyFail) {
+      remarkText.textContent = "One or more subjects below passing marks — check the F grade above.";
+    } else if (sgpa >= 9) {
+      remarkText.textContent = "Outstanding semester — well above average.";
+    } else if (sgpa >= 8) {
+      remarkText.textContent = "Strong semester, solidly in the top band.";
+    } else if (sgpa >= 7) {
+      remarkText.textContent = "Good, consistent performance this semester.";
+    } else if (sgpa >= 6) {
+      remarkText.textContent = "Passing comfortably — room to push higher.";
+    } else {
+      remarkText.textContent = "Clearing, but worth reviewing weaker subjects.";
+    }
+  }
+
+  function resetAll(){
+    buildRows();
+    document.getElementById("studentName").value = "";
+    document.getElementById("studentPRN").value = "";
+    document.getElementById("sgpaValue").textContent = "0.00";
+    document.getElementById("remarkText").textContent = "Enter marks above to see your standing.";
+    document.getElementById("whoLine").textContent = "";
+  }
+
+  document.getElementById("calcBtn").addEventListener("click", calculate);
+  document.getElementById("resetBtn").addEventListener("click", resetAll);
+
+  buildRows();
+</script>
+
+</body>
+</html>
