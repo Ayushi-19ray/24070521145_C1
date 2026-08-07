@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Palindrome Checker</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #1e1e2f;
+    color: #eee;
+    display: flex;
+    justify-content: center;
+    padding-top: 60px;
+  }
+  .box {
+    background: #2a2a3d;
+    padding: 30px;
+    border-radius: 10px;
+    width: 350px;
+  }
+  h2 { margin-top: 0; text-align: center; }
+  input {
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 5px;
+    border: none;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+  }
+  button {
+    width: 100%;
+    padding: 10px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  button:hover { background: #45a049; }
+  #result {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: bold;
+    min-height: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Palindrome Checker</h2>
+  <input type="text" id="wordInput" placeholder="Enter a word">
+  <button onclick="handleCheck()">Check</button>
+  <p id="result"></p>
+</div>
+
+<script>
+
+  // 1. FUNCTION DECLARATION
+  // Basic logic: checks if a string reads the same forward and backward
+  function isPalindrome(str) {
+    let reversed = str.split("").reverse().join(""); // local scope variable
+    return str === reversed;
+  }
+
+  // 2. FUNCTION EXPRESSION
+  // Cleans the input: lowercase + removes spaces/punctuation
+  const cleanInput = function (str) {
+    return str.toLowerCase().replace(/[^a-z0-9]/g, "");
+  };
+
+  // 3. ARROW FUNCTION
+  // Simple counter using a closure to remember how many times we checked
+  let countChecks = (function () {
+    let count = 0;               // private variable, remembered via closure
+    return () => ++count;
+  })();
+
+  // 4. FUNCTION using TRY-CATCH
+  // Handles bad input safely without crashing the page
+  function handleCheck() {
+    const resultEl = document.getElementById("result");
+
+    try {
+      const input = document.getElementById("wordInput").value;
+
+      if (!input || input.trim() === "") {
+        throw new Error("Please enter something to check.");
+      }
+
+      const cleaned = cleanInput(input);
+      const result = isPalindrome(cleaned);
+      const attempt = countChecks();
+
+      resultEl.style.color = result ? "#4CAF50" : "#e57373";
+      resultEl.textContent = result
+        ? `✓ "${input}" is a palindrome (check #${attempt})`
+        : `✗ "${input}" is not a palindrome (check #${attempt})`;
+
+    } catch (err) {
+      resultEl.style.color = "#e57373";
+      resultEl.textContent = "⚠ " + err.message;
+    }
+  }
+
+</script>
+</body>
+</html>
