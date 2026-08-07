@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WeighBill Portal — Invoice Generator</title>
+<style>
+  :root{
+    --rail-bg: #1b1c1e;
+    --blade-bg: #24262a;
+    --blade-row: #2c2e33;
+    --blade-row-hover: #34363c;
+    --border: #3a3d43;
+    --azure-blue: #1b90d1;
+    --azure-blue-deep: #0f6fad;
+    --tile-blue: #2f7bc2;
+    --tile-blue-2: #1f5f9c;
+    --tile-teal: #1f9c8e;
+    --tile-purple: #7b4fa6;
+    --tile-orange: #d97b26;
+    --green-fab: #7fba00;
+    --text-light: #e8e9eb;
+    --text-dim: #9aa0a6;
+    --white: #ffffff;
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+
+  html, body{ height: 100%; }
+
+  body{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, Arial, sans-serif;
+    background: var(--rail-bg);
+    color: var(--text-light);
+    overflow-x: hidden;
+  }
+
+  .app-shell{
+    display:flex;
+    height: 100vh;
+    min-height: 640px;
+  }
+
+  /* ================= ICON RAIL ================= */
+  nav.icon-rail{
+    width: 68px;
+    flex-shrink:0;
+    background: var(--rail-bg);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: 14px 0;
+    border-right: 1px solid #101112;
+  }
+  .rail-btn{
+    width: 44px; height: 44px;
+    display:flex; align-items:center; justify-content:center;
+    color: var(--text-dim);
+    cursor:pointer;
+    border-radius: 4px;
+    margin-bottom: 6px;
+    transition: background .12s ease, color .12s ease;
+    position: relative;
+  }
+  .rail-btn:hover{ background: #2a2c30; color: var(--text-light); }
+  .rail-btn.active{ color: var(--azure-blue); }
+  .rail-btn.active::before{
+    content:"";
+    position:absolute; left:-14px; top:6px; bottom:6px; width:3px;
+    background: var(--azure-blue);
+    border-radius: 2px;
+  }
+  .rail-btn svg{ width:22px; height:22px; }
+  .rail-label{
+    font-size: 9px;
+    text-align:center;
+    margin-top:2px;
+    color: inherit;
+  }
+  .rail-btn-wrap{
+    display:flex; flex-direction:column; align-items:center;
+    margin-bottom: 10px;
+    cursor:pointer;
+  }
+
+  .rail-spacer{ flex:1; }
+
+  .fab-new{
+    width: 40px; height: 40px;
+    border-radius: 4px;
+    background: var(--green-fab);
+    color: #1b1c1e;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    transition: filter .12s ease, transform .1s ease;
+  }
+  .fab-new:hover{ filter: brightness(1.1); }
+  .fab-new:active{ transform: scale(0.95); }
+
+  /* ================= BLADE ================= */
+  aside.blade{
+    width: 380px;
+    flex-shrink:0;
+    background: var(--blade-bg);
+    border-right: 1px solid var(--border);
+    display:flex;
+    flex-direction:column;
+    transition: margin-left .25s ease;
+  }
+  aside.blade.closed{ margin-left: -380px; }
+
+  .blade-head{
+    padding: 18px 20px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .blade-head-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .blade-head-top h1{
+    font-size: 1.15rem;
+    font-weight: 400;
+  }
+  .blade-close{
+    cursor:pointer;
+    color: var(--text-dim);
+    font-size: 1.1rem;
+    padding: 4px 8px;
+  }
+  .blade-close:hover{ color: var(--text-light); }
+
+  .blade-sub{
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    gap:4px;
+    color: var(--azure-blue);
+    font-size: 0.82rem;
+    margin-top: 6px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .blade-sub svg{ width:14px; height:14px; }
+
+  .blade-list{
+    flex:1;
+    overflow-y:auto;
+    padding: 8px 0;
+  }
+
+  .blade-item{
+    border-bottom: 1px solid #2a2c30;
+  }
+  .blade-item-head{
+    display:flex;
+    align-items:flex-start;
+    gap: 12px;
+    padding: 14px 20px;
+    cursor:pointer;
+    transition: background .12s ease;
+  }
+  .blade-item-head:hover{ background: var(--blade-row-hover); }
+  .blade-item.open .blade-item-head{ background: var(--blade-row); }
+
+  .icon-box{
+    width: 38px; height:38px;
+    border-radius: 3px;
+    flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    color: var(--white);
+  }
+  .icon-box svg{ width:20px; height:20px; }
+  .icon-box.blue{ background: var(--tile-blue); }
+  .icon-box.orange{ background: var(--tile-orange); }
+  .icon-box.purple{ background: var(--tile-purple); }
+  .icon-box.teal{ background: var(--tile-teal); }
+
+  .blade-item-text{ flex:1; min-width:0; }
+  .blade-item-text .t{ font-size: 0.95rem; font-weight: 500; color: var(--text-light); }
+  .blade-item-text .d{ font-size: 0.78rem; color: var(--text-dim); margin-top: 2px; line-height:1.4; }
+
+  .chevron{
+    color: var(--text-dim);
+    transition: transform .2s ease;
+    margin-top: 8px;
+  }
+  .blade-item.open .chevron{ transform: rotate(90deg); }
+
+  .blade-item-body{
+    max-height:0;
+    overflow:hidden;
+    transition: max-height .25s ease;
+    background: #202225;
+  }
+  .blade-item.open .blade-item-body{ max-height: 600px; }
+
+  .field-grid{
+    padding: 16px 20px 20px;
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 12px;
+  }
+  .field-grid .full{ grid-column: 1/-1; }
+
+  .field-grid label{
+    display:block;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    margin-bottom: 5px;
+  }
+  .field-grid input[type="text"],
+  .field-grid input[type="tel"],
+  .field-grid input[type="number"],
+  .field-grid select{
+    width:100%;
+    background: #17181a;
+    border: 1px solid var(--border);
+    color: var(--text-light);
+    padding: 8px 10px;
+    border-radius: 2px;
+    font-size: 0.85rem;
+    font-family: inherit;
+  }
+  .field-grid input:focus, .field-grid select:focus{
+    outline:none;
+    border-color: var(--azure-blue);
+  }
+
+  .yn-row, .pay-row{
+    display:flex; gap:8px;
+  }
+  .yn-btn, .pay-btn{
+    flex:1;
+    text-align:center;
+    padding: 7px 4px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    font-size: 0.78rem;
+    cursor:pointer;
+    color: var(--text-dim);
+    background: #17181a;
+  }
+  .yn-btn.active, .pay-btn.active{
+    background: var(--azure-blue);
+    border-color: var(--azure-blue);
+    color: var(--white);
+  }
+
+  .blade-footer{
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+  }
+  .btn-generate{
+    width:100%;
+    background: var(--azure-blue);
+    color: var(--white);
+    border:none;
+    padding: 11px 0;
+    font-size: 0.9rem;
+    border-radius: 2px;
+    cursor:pointer;
+    font-weight: 500;
+  }
+  .btn-generate:hover{ background: var(--azure-blue-deep); }
+
+  /* ================= DASHBOARD ================= */
+  main.dashboard{
+    flex:1;
+    position:relative;
+    overflow:auto;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.05), transparent 45%),
+      linear-gradient(160deg, #1e6fa8 0%, #124a78 55%, #0d3a60 100%);
+    padding: 26px;
+  }
+
+  .dash-grid{
+    display:grid;
+    grid-template-columns: 300px repeat(2, 150px);
+    grid-auto-rows: 145px;
+    gap: 12px;
+    max-width: 900px;
+  }
+
+  .tile{
+    border-radius: 2px;
+    padding: 14px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    color: var(--white);
+    position:relative;
+    overflow:hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+  }
+  .tile .t-label{
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.85;
+  }
+  .tile .t-value{
+    font-size: 1.5rem;
+    font-weight: 300;
+  }
+  .tile .t-icon{
+    position:absolute;
+    right: 12px; top: 12px;
+    opacity: 0.9;
+  }
+  .tile .t-icon svg{ width:26px; height:26px; }
+
+  .tile-hero{
+    grid-column: span 1;
+    grid-row: span 2;
+    background: linear-gradient(135deg, #2481c2, #145d97);
+    justify-content:flex-end;
+  }
+  .tile-hero .t-label{ font-size: 0.78rem; }
+  .tile-hero .t-value{ font-size: 2.3rem; font-weight: 200; margin: 4px 0; }
+  .tile-hero .t-sub{ font-size: 0.75rem; opacity: 0.85; }
+
+  .tile-blue{ background: var(--tile-blue); }
+  .tile-blue2{ background: var(--tile-blue-2); }
+  .tile-teal{ background: var(--tile-teal); }
+  .tile-purple{ background: var(--tile-purple); }
+  .tile-orange{ background: var(--tile-orange); }
+  .tile-dark{ background: #1a1b1e; }
+
+  .tile-member-badge{
+    display:inline-block;
+    background: var(--green-fab);
+    color:#1b1c1e;
+    font-size: 0.62rem;
+    text-transform:uppercase;
+    padding: 2px 6px;
+    border-radius: 2px;
+    margin-top: 4px;
+    font-weight:600;
+  }
+
+  .tile-wide{
+    grid-column: span 2;
+  }
+
+  .dash-caption{
+    color: rgba(255,255,255,0.9);
+    font-size: 0.85rem;
+    margin-bottom: 14px;
+  }
+  .dash-caption strong{ font-weight:600; }
+
+  @media (max-width: 760px){
+    aside.blade{ position:fixed; z-index:20; height:100vh; }
+    .dash-grid{ grid-template-columns: 1fr 1fr; }
+    .tile-hero{ grid-column: 1/-1; grid-row: span 1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ============ ICON RAIL ============ -->
+  <nav class="icon-rail">
+    <div class="rail-btn-wrap">
+      <div class="rail-btn active" title="Home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9h14v-9"/></svg>
+      </div>
+    </div>
+    <div class="rail-btn-wrap">
+      <div class="rail-btn" title="Notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+      </div>
+    </div>
+    <div class="rail-btn-wrap">
+      <div class="rail-btn" title="Browse">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 9h18"/></svg>
+      </div>
+    </div>
+    <div class="rail-btn-wrap">
+      <div class="rail-btn" title="Journeys">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20 10 4l4 10 3-6 3 12"/></svg>
+      </div>
+    </div>
+    <div class="rail-btn-wrap">
+      <div class="rail-btn" title="Billing">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 10h18"/></svg>
+      </div>
+    </div>
+    <div class="rail-spacer"></div>
+    <div class="fab-new" id="fabNew" title="New invoice">+</div>
+  </nav>
+
+  <!-- ============ BLADE ============ -->
+  <aside class="blade" id="blade">
+    <div class="blade-head">
+      <div class="blade-head-top">
+        <h1>New Invoice</h1>
+        <div class="blade-close" id="bladeClose">&times;</div>
+      </div>
+      <div class="blade-sub" id="resetLink">
+        Reset form
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </div>
+    </div>
+
+    <form id="billForm">
+      <div class="blade-list">
+
+        <!-- Customer & Invoice -->
+        <div class="blade-item open" data-item="customer">
+          <div class="blade-item-head">
+            <div class="icon-box blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c1.5-4 4-6 7-6s5.5 2 7 6"/></svg>
+            </div>
+            <div class="blade-item-text">
+              <div class="t">Customer &amp; Invoice</div>
+              <div class="d">Name, mobile number and invoice ID</div>
+            </div>
+            <div class="chevron">&rsaquo;</div>
+          </div>
+          <div class="blade-item-body">
+            <div class="field-grid">
+              <div class="full">
+                <label for="custName">Customer Name</label>
+                <input type="text" id="custName" placeholder="e.g. Rohan Sharma" required>
+              </div>
+              <div>
+                <label for="mobile">Mobile Number</label>
+                <input type="tel" id="mobile" placeholder="98XXXXXXXX" maxlength="10" required>
+              </div>
+              <div>
+                <label for="invoiceNo">Invoice Number</label>
+                <input type="text" id="invoiceNo" placeholder="INV-0001" required>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item -->
+        <div class="blade-item" data-item="item">
+          <div class="blade-item-head">
+            <div class="icon-box orange">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7l9-4 9 4-9 4-9-4Z"/><path d="M3 7v10l9 4 9-4V7"/></svg>
+            </div>
+            <div class="blade-item-text">
+              <div class="t">Item Details</div>
+              <div class="d">Product, quantity in kg, and rate</div>
+            </div>
+            <div class="chevron">&rsaquo;</div>
+          </div>
+          <div class="blade-item-body">
+            <div class="field-grid">
+              <div class="full">
+                <label for="productName">Product Name</label>
+                <input type="text" id="productName" placeholder="e.g. Basmati Rice" required>
+              </div>
+              <div>
+                <label for="qty">Quantity (kg)</label>
+                <input type="number" id="qty" min="0" step="0.01" placeholder="0.00" required>
+              </div>
+              <div>
+                <label for="rate">Rate per kg (₹)</label>
+                <input type="number" id="rate" min="0" step="0.01" placeholder="0.00" required>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charges & Tax -->
+        <div class="blade-item" data-item="charges">
+          <div class="blade-item-head">
+            <div class="icon-box purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 5 5 19"/><circle cx="7" cy="7" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+            </div>
+            <div class="blade-item-text">
+              <div class="t">Charges &amp; Tax</div>
+              <div class="d">Discount, GST and packing charges</div>
+            </div>
+            <div class="chevron">&rsaquo;</div>
+          </div>
+          <div class="blade-item-body">
+            <div class="field-grid">
+              <div>
+                <label for="discount">Discount (%)</label>
+                <input type="number" id="discount" min="0" max="100" step="0.1" value="0">
+              </div>
+              <div>
+                <label for="gst">GST (%)</label>
+                <input type="number" id="gst" min="0" max="100" step="0.1" value="5">
+              </div>
+              <div class="full">
+                <label for="packing">Packing Charges (₹)</label>
+                <input type="number" id="packing" min="0" step="0.01" value="0">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment & Membership -->
+        <div class="blade-item" data-item="payment">
+          <div class="blade-item-head">
+            <div class="icon-box teal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 10h18"/></svg>
+            </div>
+            <div class="blade-item-text">
+              <div class="t">Payment &amp; Membership</div>
+              <div class="d">Payment mode and membership status</div>
+            </div>
+            <div class="chevron">&rsaquo;</div>
+          </div>
+          <div class="blade-item-body">
+            <div class="field-grid">
+              <div class="full">
+                <label>Payment Mode</label>
+                <div class="pay-row" id="payRow">
+                  <div class="pay-btn active" data-val="Cash">Cash</div>
+                  <div class="pay-btn" data-val="Card">Card</div>
+                  <div class="pay-btn" data-val="UPI">UPI</div>
+                </div>
+              </div>
+              <div class="full">
+                <label>Membership</label>
+                <div class="yn-row" id="memberRow2">
+                  <div class="yn-btn active" data-val="N">No</div>
+                  <div class="yn-btn" data-val="Y">Yes (2% extra off)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="blade-footer">
+        <button type="submit" class="btn-generate">Generate Bill</button>
+      </div>
+    </form>
+  </aside>
+
+  <!-- ============ DASHBOARD ============ -->
+  <main class="dashboard">
+    <div class="dash-caption">Invoice preview for <strong id="capName">—</strong> · <span id="capInvoice">—</span></div>
+
+    <div class="dash-grid">
+
+      <div class="tile tile-hero">
+        <div class="t-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M4 20V10l8-6 8 6v10"/><path d="M9 20v-6h6v6"/></svg></div>
+        <div>
+          <div class="t-label">Total Amount</div>
+          <div class="t-value" id="tileTotal">₹0.00</div>
+          <div class="t-sub" id="tilePayMode">Payment mode: Cash <span id="tileMemberBadge"></span></div>
+        </div>
+      </div>
+
+      <div class="tile tile-blue">
+        <div class="t-label">Subtotal</div>
+        <div class="t-value" id="tileSubtotal">₹0.00</div>
+      </div>
+
+      <div class="tile tile-purple">
+        <div class="t-label">Discount</div>
+        <div class="t-value" id="tileDiscount">− ₹0.00</div>
+      </div>
+
+      <div class="tile tile-teal">
+        <div class="t-label">GST</div>
+        <div class="t-value" id="tileGst">+ ₹0.00</div>
+      </div>
+
+      <div class="tile tile-orange">
+        <div class="t-label">Packing</div>
+        <div class="t-value" id="tilePacking">+ ₹0.00</div>
+      </div>
+
+      <div class="tile tile-blue2 tile-wide">
+        <div class="t-label">Item</div>
+        <div class="t-value" style="font-size:1.15rem;" id="tileItem">—</div>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<script>
+(function(){
+  const blade = document.getElementById('blade');
+  const fabNew = document.getElementById('fabNew');
+  const bladeClose = document.getElementById('bladeClose');
+  const resetLink = document.getElementById('resetLink');
+  const form = document.getElementById('billForm');
+
+  fabNew.addEventListener('click', () => blade.classList.toggle('closed'));
+  bladeClose.addEventListener('click', () => blade.classList.add('closed'));
+
+  // Accordion behaviour
+  document.querySelectorAll('.blade-item-head').forEach(head => {
+    head.addEventListener('click', () => {
+      const item = head.parentElement;
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.blade-item').forEach(i => i.classList.remove('open'));
+      if(!wasOpen) item.classList.add('open');
+    });
+  });
+
+  // Payment mode toggle
+  let payMode = 'Cash';
+  document.querySelectorAll('#payRow .pay-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.querySelectorAll('#payRow .pay-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      payMode = btn.dataset.val;
+      calculateAndRender();
+    });
+  });
+
+  // Membership toggle
+  let membership = 'N';
+  document.querySelectorAll('#memberRow2 .yn-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.querySelectorAll('#memberRow2 .yn-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      membership = btn.dataset.val;
+      calculateAndRender();
+    });
+  });
+
+  function fmt(n){
+    return '₹' + n.toLocaleString('en-IN', {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+
+  function calculateAndRender(e){
+    if(e) e.preventDefault();
+
+    const custName = document.getElementById('custName').value.trim() || '—';
+    const invoiceNo = document.getElementById('invoiceNo').value.trim() || '—';
+    const productName = document.getElementById('productName').value.trim() || '—';
+    const qty = parseFloat(document.getElementById('qty').value) || 0;
+    const rate = parseFloat(document.getElementById('rate').value) || 0;
+    const discountPct = parseFloat(document.getElementById('discount').value) || 0;
+    const gstPct = parseFloat(document.getElementById('gst').value) || 0;
+    const packing = parseFloat(document.getElementById('packing').value) || 0;
+
+    const subtotal = qty * rate;
+    const discountAmt = subtotal * (discountPct / 100);
+    let afterDiscount = subtotal - discountAmt;
+
+    let memberAmt = 0;
+    if (membership === 'Y'){
+      memberAmt = afterDiscount * 0.02;
+      afterDiscount -= memberAmt;
+    }
+
+    const gstAmt = afterDiscount * (gstPct / 100);
+    const total = afterDiscount + gstAmt + packing;
+
+    document.getElementById('capName').textContent = custName;
+    document.getElementById('capInvoice').textContent = invoiceNo;
+
+    document.getElementById('tileTotal').textContent = fmt(total);
+    document.getElementById('tilePayMode').innerHTML = 'Payment mode: ' + payMode +
+      (membership === 'Y' ? ' <span class="tile-member-badge">Member</span>' : '');
+    document.getElementById('tileSubtotal').textContent = fmt(subtotal);
+    document.getElementById('tileDiscount').textContent = '− ' + fmt(discountAmt + memberAmt);
+    document.getElementById('tileGst').textContent = '+ ' + fmt(gstAmt);
+    document.getElementById('tilePacking').textContent = '+ ' + fmt(packing);
+    document.getElementById('tileItem').textContent = productName + ' · ' + qty.toFixed(2) + ' kg × ' + fmt(rate);
+  }
+
+  form.addEventListener('submit', calculateAndRender);
+  form.addEventListener('input', calculateAndRender);
+
+  calculateAndRender();
+})();
+</script>
+
+</body>
+</html>
