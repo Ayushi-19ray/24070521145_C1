@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Password Checker</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #1e1e2f;
+    color: #eee;
+    display: flex;
+    justify-content: center;
+    padding-top: 60px;
+  }
+  .box {
+    background: #2a2a3d;
+    padding: 30px;
+    border-radius: 10px;
+    width: 350px;
+  }
+  h2 { margin-top: 0; text-align: center; }
+  .pwd-wrap {
+    position: relative;
+    margin-bottom: 12px;
+  }
+  input {
+    width: 100%;
+    padding: 10px;
+    padding-right: 40px;
+    font-size: 15px;
+    border-radius: 5px;
+    border: none;
+    box-sizing: border-box;
+  }
+  .toggle-eye {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 16px;
+    user-select: none;
+  }
+  button {
+    width: 100%;
+    padding: 10px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  button:hover { background: #45a049; }
+  #result {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: bold;
+    min-height: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Password Checker</h2>
+  <div class="pwd-wrap">
+    <input type="password" id="pwdInput" placeholder="Enter a password">
+    <span class="toggle-eye" id="toggleEye" onclick="togglePassword()">👁️</span>
+  </div>
+  <button onclick="handleCheck()">Check</button>
+  <p id="result"></p>
+</div>
+
+<script>
+
+  // Checks if a string reads the same forward and backward
+  function isPalindrome(str) {
+    let reversed = str.split("").reverse().join("");
+    return str === reversed;
+  }
+
+  // Basic strength check: length + uppercase + number + special char
+  function isStrongPassword(str) {
+    const hasLength = str.length >= 8;
+    const hasUpper = /[A-Z]/.test(str);
+    const hasNumber = /[0-9]/.test(str);
+    const hasSpecial = /[^a-zA-Z0-9]/.test(str);
+
+    return hasLength && hasUpper && hasNumber && hasSpecial;
+  }
+
+  // Toggles password field between hidden (dots) and visible (text)
+  function togglePassword() {
+    const pwdInput = document.getElementById("pwdInput");
+    const eyeIcon = document.getElementById("toggleEye");
+
+    if (pwdInput.type === "password") {
+      pwdInput.type = "text";
+      eyeIcon.textContent = "👁";
+    } else {
+      pwdInput.type = "password";
+      eyeIcon.textContent = "👁";
+    }
+  }
+
+  function handleCheck() {
+    const resultEl = document.getElementById("result");
+
+    try {
+      const pwd = document.getElementById("pwdInput").value;
+
+      if (!pwd || pwd.trim() === "") {
+        throw new Error("Please enter a password.");
+      }
+
+      if (isPalindrome(pwd)) {
+        resultEl.style.color = "#e57373";
+        resultEl.textContent = "✗ Weak — password is a palindrome";
+        return;
+      }
+
+      if (isStrongPassword(pwd)) {
+        resultEl.style.color = "#4CAF50";
+        resultEl.textContent = "✓ Strong password";
+      } else {
+        resultEl.style.color = "#e57373";
+        resultEl.textContent = "✗ Weak — use 8+ chars, uppercase, number & special char";
+      }
+
+    } catch (err) {
+      resultEl.style.color = "#e57373";
+      resultEl.textContent = "⚠ " + err.message;
+    }
+  }
+
+</script>
+</body>
+</html>
