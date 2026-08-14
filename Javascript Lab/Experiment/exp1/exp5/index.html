@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NeonCart</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+
+        <div class="logo">
+            <span>NEON</span>CART
+        </div>
+
+        <div class="search-box">
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search products..."
+                onkeyup="searchProducts()"
+            >
+            <button>🔍</button>
+        </div>
+
+        <div class="cart-button" onclick="scrollToCart()">
+            🛒 CART
+            <span id="cartCount">0</span>
+        </div>
+
+    </header>
+
+
+    <!-- NAVIGATION -->
+    <nav>
+        <span>☰ All</span>
+        <span>Electronics</span>
+        <span>Fashion</span>
+        <span>Books</span>
+        <span>Home</span>
+        <span>Deals</span>
+    </nav>
+
+
+    <!-- HERO -->
+    <section class="hero">
+
+        <div>
+            <p class="small-title">NEXT GENERATION SHOPPING</p>
+
+            <h1>
+                SHOP <span>SMART.</span><br>
+                LIVE <span>BRIGHT.</span>
+            </h1>
+
+            <p>
+                Discover premium products at futuristic prices.
+            </p>
+
+            <button onclick="document.getElementById('products').scrollIntoView()">
+                EXPLORE PRODUCTS
+            </button>
+        </div>
+
+    </section>
+
+
+    <!-- PRODUCTS -->
+    <main>
+
+        <h2 class="section-title">
+            <span>⚡</span> FEATURED PRODUCTS
+        </h2>
+
+        <section id="products" class="products"></section>
+
+
+        <!-- CART -->
+        <section id="cartSection" class="cart-section">
+
+            <h2 class="section-title">
+                <span>🛒</span> YOUR CART
+            </h2>
+
+            <div id="cartItems">
+                <p class="empty-cart">
+                    Your cart is empty.
+                </p>
+            </div>
+
+
+            <!-- SUMMARY -->
+            <div class="summary">
+
+                <h2>ORDER SUMMARY</h2>
+
+                <div class="summary-line">
+                    <span>Total Amount</span>
+                    <strong>₹<span id="totalAmount">0</span></strong>
+                </div>
+
+                <div class="summary-line discount">
+                    <span>Discount</span>
+                    <strong>- ₹<span id="discount">0</span></strong>
+                </div>
+
+                <div class="neon-line"></div>
+
+                <div class="summary-line final">
+                    <span>FINAL AMOUNT</span>
+                    <strong>₹<span id="finalAmount">0</span></strong>
+                </div>
+
+                <button class="checkout" onclick="checkout()">
+                    PROCEED TO BUY
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        NEONCART © 2026
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
