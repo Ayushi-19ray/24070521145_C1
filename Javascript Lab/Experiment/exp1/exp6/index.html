@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>JavaScript String Functions & Regex</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>String Functions & Regular Expressions</h1>
+        <p>JavaScript Practical: String Manipulation, Email Validation and Text Analysis</p>
+    </header>
+
+
+    <div class="container">
+
+        <!-- STRING FUNCTIONS -->
+        <section class="card">
+
+            <h2>1. String Functions</h2>
+
+            <label>Enter a String</label>
+
+            <input
+                type="text"
+                id="stringInput"
+                placeholder="Enter your text here..."
+            >
+
+            <div class="button-container">
+
+                <button onclick="convertUppercase()">
+                    UPPERCASE
+                </button>
+
+                <button onclick="convertLowercase()">
+                    lowercase
+                </button>
+
+                <button onclick="checkIncludes()">
+                    includes()
+                </button>
+
+                <button onclick="findLength()">
+                    length
+                </button>
+
+            </div>
+
+            <div id="stringOutput" class="output">
+                Result will appear here.
+            </div>
+
+        </section>
+
+
+        <!-- EMAIL VALIDATION -->
+        <section class="card">
+
+            <h2>2. Email Validation using Regex</h2>
+
+            <label>Enter Email ID</label>
+
+            <input
+                type="text"
+                id="emailInput"
+                placeholder="example@gmail.com"
+            >
+
+            <button onclick="validateEmail()">
+                Validate Email
+            </button>
+
+            <div id="emailOutput" class="output">
+                Email validation result will appear here.
+            </div>
+
+        </section>
+
+
+        <!-- EMAIL EXTRACTION -->
+        <section class="card">
+
+            <h2>3. Data Extraction - Extract Valid Email IDs</h2>
+
+            <label>Enter Text Containing Email IDs</label>
+
+            <textarea
+                id="emailText"
+                placeholder="Example: Contact abc@gmail.com or xyz@yahoo.com"
+            ></textarea>
+
+            <button onclick="extractEmails()">
+                Extract Email IDs
+            </button>
+
+            <div id="extractedEmails" class="output">
+                Extracted emails will appear here.
+            </div>
+
+        </section>
+
+
+        <!-- TEXT ANALYSIS -->
+        <section class="card">
+
+            <h2>4. Text Analysis using split()</h2>
+
+            <label>Enter Text</label>
+
+            <textarea
+                id="analysisText"
+                placeholder="Enter a sentence to analyze..."
+            ></textarea>
+
+            <button onclick="analyzeText()">
+                Analyze Text
+            </button>
+
+            <div id="analysisOutput" class="output">
+                Text analysis will appear here.
+            </div>
+
+        </section>
+
+
+        <!-- QUICK REFERENCE -->
+        <section class="card reference">
+
+            <h2>Functions Used</h2>
+
+            <div class="function-grid">
+
+                <div>
+                    <code>toUpperCase()</code>
+                    <p>Converts text to uppercase.</p>
+                </div>
+
+                <div>
+                    <code>toLowerCase()</code>
+                    <p>Converts text to lowercase.</p>
+                </div>
+
+                <div>
+                    <code>includes()</code>
+                    <p>Checks whether text contains a value.</p>
+                </div>
+
+                <div>
+                    <code>length</code>
+                    <p>Returns the number of characters.</p>
+                </div>
+
+                <div>
+                    <code>split()</code>
+                    <p>Splits a string into an array.</p>
+                </div>
+
+                <div>
+                    <code>RegExp</code>
+                    <p>Used for email validation and extraction.</p>
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <footer>
+        JavaScript String Functions & Regex Practical
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
