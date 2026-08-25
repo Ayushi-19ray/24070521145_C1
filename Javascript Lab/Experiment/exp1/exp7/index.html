@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <h1>Ayushi Ray: 145</h1>
+
+    <!-- Create New List -->
+    <div class="new-list">
+        <input type="text" id="listInput" placeholder="Enter list name">
+        <button onclick="addList()">+ Add List</button>
+    </div>
+
+    <!-- Lists -->
+    <div class="lists" id="listsContainer"></div>
+
+    <!-- Current List -->
+    <div class="todo-section">
+
+        <div class="list-header">
+            <h2 id="currentListName">Select a List</h2>
+            <button onclick="deleteCurrentList()" class="delete-list">
+                Delete List
+            </button>
+        </div>
+
+        <!-- Add Task -->
+        <div class="task-input">
+            <input
+                type="text"
+                id="taskInput"
+                placeholder="Enter a task"
+            >
+            <button onclick="addTask()">Add Task</button>
+        </div>
+
+        <!-- Tasks -->
+        <ul id="taskList"></ul>
+
+        <!-- Undo -->
+        <button onclick="undo()" class="undo-btn">
+            ↩ Undo
+        </button>
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
