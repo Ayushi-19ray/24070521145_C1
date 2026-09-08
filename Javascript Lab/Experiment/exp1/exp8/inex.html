@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Gym Admission Form</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="form-container">
+
+        <h1>GYM ADMISSION</h1>
+        <p class="subtitle">Join us and start your fitness journey!</p>
+
+        <form id="gymForm">
+
+            <!-- Full Name -->
+            <div class="form-group">
+                <label for="name">Full Name</label>
+
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="Enter your full name"
+                >
+
+                <small id="nameError"></small>
+            </div>
+
+
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email">Email</label>
+
+                <input
+                    type="text"
+                    id="email"
+                    placeholder="example@gmail.com"
+                >
+
+                <small id="emailError"></small>
+            </div>
+
+
+            <!-- Mobile Number -->
+            <div class="form-group">
+                <label for="mobile">Mobile Number</label>
+
+                <input
+                    type="text"
+                    id="mobile"
+                    placeholder="10 digit mobile number"
+                    maxlength="10"
+                >
+
+                <small id="mobileError"></small>
+            </div>
+
+
+            <!-- Age -->
+            <div class="form-group">
+                <label for="age">Age</label>
+
+                <input
+                    type="number"
+                    id="age"
+                    placeholder="Enter your age"
+                >
+
+                <small id="ageError"></small>
+            </div>
+
+
+            <!-- Membership Plan -->
+            <div class="form-group">
+                <label for="membership">Membership Plan</label>
+
+                <select id="membership">
+                    <option value="">-- Select Membership Plan --</option>
+                    <option value="monthly">Monthly - ₹1000</option>
+                    <option value="quarterly">Quarterly - ₹2500</option>
+                    <option value="yearly">Yearly - ₹8000</option>
+                </select>
+
+                <small id="membershipError"></small>
+            </div>
+
+
+            <button type="submit">Submit Application</button>
+
+            <p id="successMessage"></p>
+
+        </form>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
+

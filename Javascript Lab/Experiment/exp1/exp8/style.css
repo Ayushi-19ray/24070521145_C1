@@ -1,0 +1,214 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+        url("https://cdn.prod.website-files.com/5c34b1d990599d63c8b3e892/6998785de2b402e6258a5df6_hero-section-background-mobile.png");
+
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    padding: 30px;
+}
+
+
+/* Form Box */
+
+.form-container {
+    width: 430px;
+
+    /* Translucent grey */
+    background: rgba(160, 162, 161, 0.75);
+
+    padding: 35px;
+
+    border-radius: 15px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+
+    /* Glass effect */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+
+/* Heading */
+
+h1 {
+    text-align: center;
+    color: #222;
+
+    margin-bottom: 5px;
+
+    letter-spacing: 2px;
+}
+
+.subtitle {
+    text-align: center;
+
+    color: #666;
+
+    margin-bottom: 25px;
+}
+
+
+/* Form Group */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+
+/* Labels */
+
+label {
+    display: block;
+
+    font-weight: bold;
+
+    margin-bottom: 7px;
+
+    color: #333;
+}
+
+
+/* Inputs */
+
+input,
+select {
+    width: 100%;
+
+    padding: 12px;
+
+    border: 2px solid #ccc;
+
+    border-radius: 7px;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition: 0.2s;
+}
+
+
+/* Input when user clicks */
+
+input:focus,
+select:focus {
+    border-color: #333;
+
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Valid Input */
+
+input.valid,
+select.valid {
+    border-color: green;
+
+    background-color: #f1fff1;
+}
+
+
+/* Invalid Input */
+
+input.invalid,
+select.invalid {
+    border-color: red;
+
+    background-color: #fff1f1;
+}
+
+
+/* Error Message */
+
+small {
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 13px;
+
+    color: red;
+
+    min-height: 16px;
+}
+
+
+/* Success Message */
+
+#successMessage {
+    text-align: center;
+
+    color: green;
+
+    font-weight: bold;
+
+    margin-top: 15px;
+}
+
+
+/* Submit Button */
+
+button {
+    width: 100%;
+
+    padding: 13px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background: #222;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #444;
+
+    transform: translateY(-2px);
+}
+
+
+/* Mobile Responsive */
+
+@media (max-width: 500px) {
+
+    body {
+        padding: 15px;
+    }
+
+    .form-container {
+        width: 100%;
+
+        padding: 25px;
+    }
+}
+
