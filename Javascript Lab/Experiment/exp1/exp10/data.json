@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "name": "Ayushi",
+        "course": "B.Tech CSE",
+        "marks": 85
+    },
+    {
+        "id": 2,
+        "name": "Rahul",
+        "course": "B.Tech AIML",
+        "marks": 91
+    },
+    {
+        "id": 3,
+        "name": "Priya",
+        "course": "B.Tech CSE",
+        "marks": 78
+    },
+    {
+        "id": 4,
+        "name": "Aditya",
+        "course": "B.Tech Data Science",
+        "marks": 88
+    }
+]
