@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Event Handling and Form Validation</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Registration Form</h1>
+        <p class="subtitle">JavaScript Event Handling & Form Validation</p>
+
+        <form id="registrationForm">
+
+            <!-- First Name -->
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" placeholder="Enter first name">
+                <span class="error" id="firstNameError"></span>
+            </div>
+
+            <!-- Last Name -->
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" placeholder="Enter last name">
+                <span class="error" id="lastNameError"></span>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Enter email">
+                <span class="error" id="emailError"></span>
+            </div>
+
+            <!-- Birthday -->
+            <div class="form-group">
+                <label for="birthday">Birthday</label>
+                <input type="date" id="birthday">
+                <span class="error" id="birthdayError"></span>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter password">
+                <span class="error" id="passwordError"></span>
+            </div>
+
+            <!-- Re-enter Password -->
+            <div class="form-group">
+                <label for="confirmPassword">Re-enter Password</label>
+                <input type="password" id="confirmPassword" placeholder="Re-enter password">
+                <span class="error" id="confirmPasswordError"></span>
+            </div>
+
+            <!-- Terms -->
+            <div class="terms">
+                <input type="checkbox" id="terms">
+                <label for="terms">
+                    I agree to the Terms and Conditions
+                </label>
+            </div>
+
+            <span class="error" id="termsError"></span>
+
+            <!-- Submit -->
+            <button type="submit">Register</button>
+
+            <div id="successMessage" class="success"></div>
+
+        </form>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
