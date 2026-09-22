@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>String Operations using JavaScript</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>JavaScript String Operations</h1>
+
+        <!-- Basic String Operations -->
+        <section>
+            <h2>1. Basic String Operations</h2>
+
+            <input type="text" id="basicString"
+                   placeholder="Enter a string">
+
+            <button onclick="performBasicOperations()">
+                Perform Operations
+            </button>
+
+            <div id="basicOutput" class="output"></div>
+        </section>
+
+
+        <!-- String Methods -->
+        <section>
+            <h2>2. String Methods</h2>
+
+            <input type="text" id="methodString"
+                   placeholder="Enter a string">
+
+            <input type="text" id="searchText"
+                   placeholder="Text to search">
+
+            <input type="text" id="replaceText"
+                   placeholder="Text to replace">
+
+            <input type="text" id="replacement"
+                   placeholder="Replacement text">
+
+            <button onclick="performStringMethods()">
+                Apply Methods
+            </button>
+
+            <div id="methodOutput" class="output"></div>
+        </section>
+
+
+        <!-- Reverse String -->
+        <section>
+            <h2>3.Reverse a String</h2>
+
+            <input type="text" id="reverseInput"
+                   placeholder="Enter a string">
+
+            <button onclick="reverseString()">
+                Reverse
+            </button>
+
+            <div id="reverseOutput" class="output"></div>
+        </section>
+
+
+        <!-- Count Vowels -->
+        <section>
+            <h2>4. Count Vowels</h2>
+
+            <textarea id="paragraphInput"
+                      placeholder="Enter a paragraph"></textarea>
+
+            <button onclick="countVowels()">
+                Count Vowels
+            </button>
+
+            <div id="vowelOutput" class="output"></div>
+        </section>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
